@@ -55,20 +55,18 @@ public class ConsoleApp {
             "userNina", "nina007"
     );
 
-
     public ConsoleApp() {
         try {
             con = ConnectionSimpleSGBD.defaultCon();
             service = new TournoiService(con);
 
-            // Connexion (admin ou utilisateur)
             boolean ok = choisirMode();
             if (!ok) {
                 System.out.println("Programme arrêté.");
                 System.exit(0);
             }
 
-            // Charger ou créer un tournoi
+            // Chargement ou création d’un tournoi
             List<Tournoi> tournois = TournoiDAO.findAll(con);
 
             if (tournois.isEmpty()) {
@@ -99,25 +97,21 @@ public class ConsoleApp {
         System.out.print("Mot de passe : ");
         String mdp = sc.nextLine().trim();
 
-        // Vérifie ADMIN
         if (admins.containsKey(login) && admins.get(login).equals(mdp)) {
             isAdmin = true;
             System.out.println(">>> Connexion ADMIN réussie : " + login);
             return true;
         }
 
-        // Vérifie UTILISATEUR
         if (users.containsKey(login) && users.get(login).equals(mdp)) {
             isAdmin = false;
             System.out.println(">>> Connexion UTILISATEUR réussie : " + login);
             return true;
         }
 
-        // Aucun compte trouvé
         System.out.println("❌ Compte introuvable.");
         return false;
     }
-
 
     /* ============================================================
      *                         MENU
@@ -127,6 +121,7 @@ public class ConsoleApp {
 
         while (choix != 0) {
             System.out.println("\n===== MENU TOURNOI =====");
+            System.out.println("Tournoi courant : " + tournoi.getNom() + " (double)");
             System.out.println("1. Liste des joueurs");
             System.out.println("2. Afficher le classement");
 
@@ -134,10 +129,13 @@ public class ConsoleApp {
                 System.out.println("3. Ajouter un joueur");
                 System.out.println("4. Créer une nouvelle ronde");
                 System.out.println("5. Enregistrer le score d’un match");
+                System.out.println("7. Créer un nouveau tournoi");
             }
 
+            System.out.println("6. Changer de tournoi");
             System.out.println("0. Quitter");
             System.out.print("Votre choix : ");
+
             choix = Integer.parseInt(sc.nextLine());
 
             try {
@@ -156,6 +154,11 @@ public class ConsoleApp {
                         if (isAdmin) enregistrerScore();
                         else System.out.println("Accès refusé : réservé à l’admin.");
                     }
+                    case 6 -> choisirTournoi();
+                    case 7 -> {
+                        if (isAdmin) creerTournoi();
+                        else System.out.println("Accès refusé.");
+                    }
                     case 0 -> System.out.println("Au revoir !");
                     default -> System.out.println("Choix invalide !");
                 }
@@ -165,6 +168,46 @@ public class ConsoleApp {
         }
     }
 
+    /* ============================================================
+     *                 MULTI-TOURNOI
+     * ============================================================ */
+    private void choisirTournoi() throws SQLException {
+        List<Tournoi> tournois = TournoiDAO.findAll(con);
+
+        System.out.println("\n===== CHOIX DU TOURNOI =====");
+        for (int i = 0; i < tournois.size(); i++) {
+            System.out.println((i + 1) + ". " + tournois.get(i).getNom());
+        }
+
+        System.out.print("Votre choix : ");
+        int c = Integer.parseInt(sc.nextLine());
+
+        if (c < 1 || c > tournois.size()) {
+            System.out.println("Choix invalide.");
+            return;
+        }
+
+        tournoi = tournois.get(c - 1);
+        System.out.println(">>> Tournoi sélectionné : " + tournoi.getNom());
+    }
+
+    private void creerTournoi() throws SQLException {
+        System.out.print("Nom du tournoi : ");
+        String nom = sc.nextLine();
+
+        // Tennis double : 2 joueurs par équipe FIXE
+        int nbJoueurs = 2;
+
+        System.out.print("Nombre de rondes max : ");
+        int nbRondes = Integer.parseInt(sc.nextLine());
+
+        Club club = ClubDAO.getOrCreateDefaultClub(con);
+        tournoi = TournoiDAO.insert(con,
+                new Tournoi(0, nom, nbRondes, nbJoueurs, club.getId()));
+
+        System.out.println(">>> Nouveau tournoi créé et sélectionné : "
+                + tournoi.getNom() + " (double, 2 joueurs par équipe)");
+    }
 
     /* ============================================================
      *                     AJOUT JOUEUR
@@ -232,8 +275,8 @@ public class ConsoleApp {
         System.out.println("\n===== CLASSEMENT GENERAL =====");
         int pos = 1;
         for (Joueur j : classement) {
-            System.out.println(pos + ". " + j.getNom() + " " + j.getPrenom() +
-                    " - " + j.getScoreTotal() + " pts");
+            System.out.println(pos + ". " + j.getNom() + " " + j.getPrenom()
+                    + " - " + j.getScoreTotal() + " pts");
             pos++;
         }
     }
@@ -243,7 +286,6 @@ public class ConsoleApp {
         app.menu();
     }
 }
-
 
 
 
