@@ -64,5 +64,24 @@ public class MatchDAO {
             st.executeUpdate();
         }
     }
+    
+    public static MatchTournoi findById(Connection con, int id) throws SQLException {
+        String sql = "select * from match where id=?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Integer idTerrain = (rs.getObject("idTerrain") == null) ? null : rs.getInt("idTerrain");
+                    return new MatchTournoi(
+                            rs.getInt("id"),
+                            rs.getInt("idRonde"),
+                            idTerrain,
+                            rs.getString("statut")
+                    );
+                }
+            }
+        }
+        return null;
+    }
 }
 

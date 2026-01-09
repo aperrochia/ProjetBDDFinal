@@ -16,27 +16,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.toto.webui;
+package com.vaadin.flow.component.textfield;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.RouterLink;
-
-import fr.insa.toto.webui.views.*;
+import java.time.LocalDate;
 
 /**
  *
  * @author perro
  */
+public class DatePicker {
 
-public class MainMenu extends VerticalLayout {
-
-    public MainMenu() {
-        setPadding(true);
-
-        add(new RouterLink("Accueil", AccueilView.class));
-        add(new RouterLink("Joueurs", JoueursView.class));
-        add(new RouterLink("Rondes", RondesView.class));
-        add(new RouterLink("Classement", ClassementView.class));
-        add(new RouterLink("Paramètres tournoi", ParametresTournoiView.class));
+    public LocalDate getValue() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
 }

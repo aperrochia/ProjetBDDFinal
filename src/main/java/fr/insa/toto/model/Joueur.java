@@ -26,7 +26,7 @@ public class Joueur {
     private String nom;
     private String prenom;
     private String sexe;          // 'M' ou 'F' ou autre
-    private Date dateNaissance;
+    private Date dateN;
     private int scoreTotal;
     private int idTournoi;
 
@@ -34,12 +34,12 @@ public class Joueur {
     }
 
     public Joueur(int id, String nom, String prenom, String sexe, 
-                  Date dateNaissance, int scoreTotal, int idTournoi) {
+                  Date dateN, int scoreTotal, int idTournoi) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.sexe = sexe;
-        this.dateNaissance = dateNaissance;
+        this.dateN = dateN;
         this.scoreTotal = scoreTotal;
         this.idTournoi = idTournoi;
     }
@@ -80,12 +80,12 @@ public class Joueur {
         this.sexe = sexe;
     }
 
-    public Date getDateNaissance() {
-        return dateNaissance;
+    public Date getDateN() {
+        return dateN;
     }
 
-    public void setDateNaissance(Date dateNaissance) {
-        this.dateNaissance = dateNaissance;
+    public void setDateN(Date dateN) {
+        this.dateN = dateN;
     }
 
     public int getScoreTotal() {

@@ -76,4 +76,24 @@ public class RondeDAO {
             st.executeUpdate();
         }
     }
+    
+    public static Ronde findById(Connection con, int id) throws SQLException {
+        String sql = "select * from ronde where id=?";
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            st.setInt(1, id);
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    return new Ronde(
+                            rs.getInt("id"),
+                            rs.getInt("numero"),
+                            rs.getTimestamp("timestampDebut"),
+                            rs.getString("statut"),
+                            rs.getInt("idTournoi")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
 }

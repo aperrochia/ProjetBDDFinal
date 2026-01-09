@@ -19,21 +19,36 @@ along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
 package fr.insa.toto.webui;
 
 import com.vaadin.flow.component.applayout.AppLayout;
-import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import fr.insa.toto.webui.utilisateurs.SessionContext;
+import fr.insa.toto.webui.views.LoginView;
 
 
 
 /**
- * d
+ * 
  * @author perro
  */
+
 public class MainLayout extends AppLayout {
-    
-    public MainLayout(){
-        this.addToDrawer(new MainMenu());
-        DrawerToggle toggle = new DrawerToggle();
-        this.addToNavbar(toggle,new H2("ceci est l'entete"));
+
+    public MainLayout() {
+        H2 title = new H2("Tournoi");
+        title.getStyle().set("margin", "0");
+
+        Button logout = new Button("Déconnexion", e -> {
+            SessionContext.logout();
+            getUI().ifPresent(ui -> ui.navigate(LoginView.class));
+        });
+
+        HorizontalLayout header = new HorizontalLayout(title, logout);
+        header.setWidthFull();
+        header.expand(title);
+        header.setPadding(true);
+
+        addToNavbar(header);
+        addToDrawer(new MainMenu());
     }
-    
 }

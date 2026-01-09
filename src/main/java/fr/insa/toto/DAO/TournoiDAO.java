@@ -72,6 +72,19 @@ public class TournoiDAO {
             }
         }
     }
+    public static void updateParams(java.sql.Connection con, int idTournoi, int nbTerrains, int nbJoueursParEquipe)
+        throws java.sql.SQLException {
+
+    String sql = "UPDATE tournoi SET nbTerrains = ?, nbJoueursParEquipe = ? WHERE id = ?";
+    try (java.sql.PreparedStatement pst = con.prepareStatement(sql)) {
+        pst.setInt(1, nbTerrains);
+        pst.setInt(2, nbJoueursParEquipe);
+        pst.setInt(3, idTournoi);
+        pst.executeUpdate();
+    }
+}
+
+
 }
 
 

@@ -25,12 +25,12 @@ import java.util.*;
 public class JoueurDAO {
 
     public static Joueur insert(Connection con, Joueur j) throws SQLException {
-        String sql = "insert into joueur (nom,prenom,sexe,dateNaissance,scoreTotal,idTournoi) values (?,?,?,?,?,?)";
+        String sql = "insert into joueur (nom,prenom,sexe,dateN,scoreTotal,idTournoi) values (?,?,?,?,?,?)";
         try (PreparedStatement st = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             st.setString(1, j.getNom());
             st.setString(2, j.getPrenom());
             st.setString(3, j.getSexe());
-            st.setDate(4, j.getDateNaissance());
+            st.setDate(4, j.getDateN());
             st.setInt(5, j.getScoreTotal());
             st.setInt(6, j.getIdTournoi());
             st.executeUpdate();
@@ -53,7 +53,7 @@ public class JoueurDAO {
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("sexe"),
-                        rs.getDate("dateNaissance"),
+                        rs.getDate("dateN"),
                         rs.getInt("scoreTotal"),
                         rs.getInt("idTournoi")
                     ));
@@ -84,7 +84,7 @@ public class JoueurDAO {
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("sexe"),
-                        rs.getDate("dateNaissance"),
+                        rs.getDate("dateN"),
                         rs.getInt("scoreTotal"),
                         rs.getInt("idTournoi")
                     ));
@@ -93,5 +93,26 @@ public class JoueurDAO {
         }
         return res;
     }
+    
+   public static Joueur findById(Connection con, int id) throws SQLException {
+    String sql = "select * from joueur where id=?";
+    try (PreparedStatement st = con.prepareStatement(sql)) {
+        st.setInt(1, id);
+        try (ResultSet rs = st.executeQuery()) {
+            if (rs.next()) {
+                return new Joueur(
+                        rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("sexe"),
+                        rs.getDate("dateN"),
+                        rs.getInt("scoreTotal"),
+                        rs.getInt("idTournoi")
+                );
+            }
+        }
+    }
+    return null;
+} 
 }
 

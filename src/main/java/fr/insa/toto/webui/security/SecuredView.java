@@ -16,27 +16,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with CoursBeuvron.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.insa.toto.webui;
+package fr.insa.toto.webui.security;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.RouterLink;
-
-import fr.insa.toto.webui.views.*;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import fr.insa.toto.webui.utilisateurs.SessionContext;
+import fr.insa.toto.webui.views.LoginView;
 
 /**
  *
  * @author perro
  */
+public interface SecuredView extends BeforeEnterObserver {
 
-public class MainMenu extends VerticalLayout {
-
-    public MainMenu() {
-        setPadding(true);
-
-        add(new RouterLink("Accueil", AccueilView.class));
-        add(new RouterLink("Joueurs", JoueursView.class));
-        add(new RouterLink("Rondes", RondesView.class));
-        add(new RouterLink("Classement", ClassementView.class));
-        add(new RouterLink("Paramètres tournoi", ParametresTournoiView.class));
+    @Override
+    default void beforeEnter(BeforeEnterEvent event) {
+        if (!SessionContext.isLoggedIn()) {
+            event.forwardTo(LoginView.class);
+        }
     }
 }
